@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from transformers import logging, BertModel, AutoTokenizer, BertForSequenceClassification
 
 # count = 0
-def GetScore(m, s, r, k, ds="semeval"):
+def GetScore(m, s, r, k, lam, ds="semeval"):
     """
     Calculate the score based on the binary mask, scores and edge scores
 
@@ -16,15 +16,13 @@ def GetScore(m, s, r, k, ds="semeval"):
 
     :return: torch.Tensor, score with shape (batch_size, 1)
     """
-    score = torch.sum(m * (s * 100) * 8000, dim=-1)
-    score += torch.sum(m[:, :-1] * m[:, 1:] * r * 8000, dim=-1)
-    # import pdb; pdb.set_trace()
+    score = torch.sum(m * s * 2988.0, dim=-1)
+    score += torch.sum(m[:, :-1] * m[:, 1:] * r, dim=-1)
     selected_nums = torch.cumsum(m, dim=-1)[..., -1:]
-    lam = 8000 * 508.1
     lambda_multiplier = lam * (k - selected_nums)
     lambda_multiplier = lambda_multiplier.squeeze(-1)
     score += lambda_multiplier
-    return score.unsqueeze(-1) / 1000
+    return score.unsqueeze(-1)
 
 class GibbsSampler(nn.Module):
     """
@@ -67,10 +65,10 @@ class GibbsSampler(nn.Module):
                 if True:
                     iter_zero = iter.clone()
                     iter_zero[..., timestep] = 0
-                    score_zero = GetScore(iter_zero * attention_mask, s, 500, 28, ds=self.ds)
+                    score_zero = GetScore(iter_zero * attention_mask, s, 300, 28, 510.3, ds=self.ds)
                     iter_one = iter.clone()
                     iter_one[..., timestep] = 1
-                    score_one = GetScore(iter_one * attention_mask, s, 500, 28, ds=self.ds)
+                    score_one = GetScore(iter_one * attention_mask, s, 300, 28, 510.3, ds=self.ds)
                     score_all = torch.cat((score_zero, score_one), dim=-1)
                     prob_real = F.softmax(score_all, dim=-1)
                     # perturb-and-map with imported library

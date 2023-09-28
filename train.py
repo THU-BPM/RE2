@@ -163,9 +163,10 @@ def main():
                 acc = (torch.argmax(logits, dim=1) == b_labels).sum().item() / len(b_labels)
                 print(f"Train: {index * batch_size:8d} / {train_size:8d} - loss: {loss.item():8f}, acc: {acc:5f}", end="\r")
 
-    torch.save(re_module.bert_model.state_dict(), f"./model_{args.dataset}.bin")
-    print(f"Model saved as './model_{args.dataset}.bin'")
-    print()
+            torch.save(re_module.bert_model.state_dict(), f"./model_{args.dataset}.bin")
+            print(f"Model saved as './model_{args.dataset}.bin'")
+            print("Run the script again to load tuned model.")
+            return
 
     # test
     print(f"Test DS: {test_size} samples")

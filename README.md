@@ -22,7 +22,7 @@ Run the full model on SemEval dataset with default hyperparameters
 ```
 python3 train.py
 ```
-This will train and evaluate our model. You may download the checkpoint from [Google Drive](https://drive.google.com/drive/folders/1GLMqBF2tV7yFg2PwS_a9pmzVb87cgFAA?usp=share_link) as the parameters are tuned based on this checkpoint.
+This will train and evaluate our model. You may download the checkpoint from [Google Drive](https://drive.google.com/drive/folders/1GLMqBF2tV7yFg2PwS_a9pmzVb87cgFAA?usp=share_link) as the parameters are tuned based on this checkpoint. You may migrate this repository and apply the same method to SURE.
 
 ## Acknowledgements
 We thank the authors of the original SemEval dataset and the Transformers library for their contributions.
